@@ -6,20 +6,18 @@ const { json } = require('body-parser');
 const { typeDefs } = require('./schema/types');
 const { resolvers } = require('./schema/resolvers');
 
+const app = express();
 async function startApolloServer() {
-  const app = express();
   const server = new ApolloServer({
     typeDefs,
     resolvers,
   });
 
   await server.start();
-
   app.use('/graphql', cors(), json(), expressMiddleware(server));
-
-  app.listen(4000, () => {
-    console.log('Listening');
-  });
 }
-
 startApolloServer();
+
+app.listen(4000, () => {
+  console.log('Listening');
+});
