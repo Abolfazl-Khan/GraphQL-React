@@ -1,11 +1,29 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMutation, gql } from '@apollo/client';
+import { Link, useNavigate } from 'react-router-dom';
+import query from '../queries/fetchSongs';
+
+const ADD_SONG = gql`
+  mutation AddSong($title: String!) {
+    addSong(title: $title) {
+      id
+      title
+    }
+  }
+`;
 
 function SongCreate() {
   const [title, setTitle] = useState('');
+  const [addSong] = useMutation(ADD_SONG, {
+    refetchQueries: [{ query }],
+  });
+
+  const navigate = useNavigate();
 
   const onSubmit = (event) => {
     event.preventDefault();
+
+    addSong({ variables: { title }, onCompleted: () => navigate('/') });
   };
 
   return (
