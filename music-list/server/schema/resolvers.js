@@ -44,8 +44,15 @@ exports.resolvers = {
       return LyricData.like(id);
     },
 
-    deleteSong: (parent, { id }) => {
-      return Song.findOneAndRemove(id);
+    deleteSong: async (parent, { id }) => {
+      try {
+        const result = await SongData.remove({ _id: id });
+        if (result.deletedCount == 0)
+          return new graphql.GraphQLError('Song not found');
+        return true;
+      } catch (error) {
+        throw new graphql.GraphQLError(error);
+      }
     },
   },
 

@@ -20,9 +20,9 @@ exports.typeDefs = `
 
   type Mutation {
     addSong(title: String!): SongType
-    addLyricToSong(content: String,songId:ID!): SongType
-    likeLyric(id:ID!): LyricType
-    deleteSong(id:ID!): SongType
+    addLyricToSong(content: String, songId: ID!): SongType
+    likeLyric(id: ID!): LyricType
+    deleteSong(id: ID!): Boolean
 
   }
 `;
