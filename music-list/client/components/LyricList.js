@@ -5,6 +5,7 @@ const LIKE_LYRIC = gql`
   mutation LikeLyric($id: ID!) {
     likeLyric(id: $id) {
       id
+      __typename
       likes
     }
   }
@@ -13,8 +14,17 @@ const LIKE_LYRIC = gql`
 function LyricList(props) {
   const [likeLyric] = useMutation(LIKE_LYRIC);
 
-  const onLike = (id) => {
-    likeLyric({ variables: { id } });
+  const onLike = (id, likes) => {
+    likeLyric({
+      variables: { id },
+      optimisticResponse: {
+        likeLyric: {
+          id,
+          __typename: 'LyricType',
+          likes: +likes + 1,
+        },
+      },
+    });
   };
 
   const renderLyrics = () =>
@@ -23,7 +33,7 @@ function LyricList(props) {
         <li key={id} className='collection-item'>
           {content}
           <div className='vote-box'>
-            <i className='material-icons' onClick={() => onLike(id)}>
+            <i className='material-icons' onClick={() => onLike(id, likes)}>
               thumb_up
             </i>
             {likes}
